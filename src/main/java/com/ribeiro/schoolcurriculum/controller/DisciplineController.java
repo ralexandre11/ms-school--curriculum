@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ribeiro.schoolcurriculum.entity.Discipline;
-import com.ribeiro.schoolcurriculum.repository.DisciplineRepository;
 import com.ribeiro.schoolcurriculum.service.DisciplineServiceImpl;
 
 @RestController
@@ -23,29 +22,21 @@ import com.ribeiro.schoolcurriculum.service.DisciplineServiceImpl;
 public class DisciplineController {
 
 	@Autowired
-	private DisciplineRepository repository;
-	
-	@Autowired
 	private DisciplineServiceImpl service;
 	
 	@GetMapping
 	public ResponseEntity<List<Discipline>> allDiscipline() {
-		return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+		return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Discipline> getDisciplineById(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(repository.findById(id).get());
+		return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
 	}
 	
 	@PostMapping
 	public ResponseEntity<Discipline> createDiscipline(@RequestBody Discipline discipline) {
-		try {
-			Discipline disciplineSaved = repository.save(discipline);
-			return ResponseEntity.status(HttpStatus.CREATED).body(disciplineSaved);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(discipline);
-		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(discipline));
 	}
 
 	@PutMapping("/{id}")

@@ -1,5 +1,9 @@
 package com.ribeiro.schoolcurriculum.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +15,42 @@ public class DisciplineServiceImpl implements DisciplineService {
 
 	@Autowired
 	private DisciplineRepository repository;
+
+	@Override
+	public List<Discipline> getAll() {
+		try {
+			return repository.findAll();
+		} catch (Exception e) {
+			return new ArrayList<>();		}
+	}
+
+	@Override
+	public Discipline getById(Long id) {
+		try {
+			Optional<Discipline> discipline = this.repository.findById(id);
+			if (discipline.isPresent()) {
+				return discipline.get();
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public Discipline save(Discipline discipline) {
+		try {
+			return repository.save(discipline);
+		} catch (Exception e) {
+			return discipline;
+		}
+	}
+
 	
 	@Override
 	public Discipline update(final Long id, final Discipline discipline) {
 		try {
-			Discipline disciplineFound = repository.findById(discipline.getId()).get();
+			Discipline disciplineFound = repository.findById(id).get();
 			disciplineFound.setName(discipline.getName());
 			disciplineFound.setHours(discipline.getHours());
 			disciplineFound.setCodeDiscipline(discipline.getCodeDiscipline());
@@ -36,7 +71,5 @@ public class DisciplineServiceImpl implements DisciplineService {
 			return false;
 		}
 	}
-
-	
 	
 }
